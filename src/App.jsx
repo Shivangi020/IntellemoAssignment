@@ -9,8 +9,22 @@ function App() {
   const [image, setImage] = useState(null);
   const [text ,setText] = useState()
   const [renderText , setRenderText] = useState({text:'' , isAdd :false})
-  const transformerRef =useRef();
-  const imageNodeRef = useRef();
+  const imageRef = useRef();
+  // const textRef = useRef()
+  const trRef = useRef();
+  // const trRef2 = useRef();
+  
+  const [imageProps, setImageProps] = useState({
+    x: 100, // Initial X position
+    y: 100, // Initial Y position
+    width: 200, // Initial width
+    height: 200, // Initial height
+    selected: false, // Selected state
+  });
+
+  const [textProps ,setTextProps] = useState({
+    selected :false 
+  })
 
   useEffect(() => {
     const img = new window.Image();
@@ -21,13 +35,12 @@ function App() {
     };
   }, []);
 
-  const [imageProps, setImageProps] = useState({
-    x: 100, // Initial X position
-    y: 100, // Initial Y position
-    width: 200, // Initial width
-    height: 200, // Initial height
-    selected: false, // Selected state
-  });
+  useEffect(() => {
+    if (imageProps.selected) {
+      trRef.current.nodes([imageRef.current]);
+      trRef.current.getLayer().batchDraw();
+    }
+  }, [imageProps.selected]);
 
   const handleImageClick = () => {
     setImageProps({
@@ -52,7 +65,7 @@ function App() {
     <Stage width={800} height={600}>
       <Layer>
             <Image
-              ref={imageNodeRef}
+              ref={imageRef}
               image={image}
               x={imageProps.x}
               y={imageProps.y}
@@ -62,17 +75,12 @@ function App() {
             />
         {imageProps.selected && (
           <Transformer
-            ref={transformerRef}
+            ref={trRef}
             enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
-            boundBoxFunc={(oldBox, newBox) => {
-              if (newBox.width < 5 || newBox.height < 5) {
-                return oldBox;
-              }
-              return newBox;
-            }}
+  
           />
         )}
-    { renderText.isAdd ?  <Text
+    { renderText.isAdd ? <Text
           text={renderText.text}
           x={100}
           y={100}
@@ -80,7 +88,7 @@ function App() {
           fontFamily="Arial"
           fill="white"
           draggable ={true}
-        /> :null}
+        />  :null}
         
       </Layer>
     </Stage>
