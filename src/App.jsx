@@ -12,8 +12,8 @@ function App() {
   const imageRef = useRef();
   const trRef = useRef();
 
-  // const textRef = useRef()
-  // const trRef2 = useRef();
+  const textRef = useRef()
+  const trRef2 = useRef();
   
   const [imageProps, setImageProps] = useState({
     x: 100, // Initial X position
@@ -44,6 +44,15 @@ function App() {
     }
   }, [imageProps.selected]);
 
+  useEffect(() => {
+    if (textProps.selected) {
+      trRef2.current.nodes([textRef.current]);
+      trRef2.current.getLayer().batchDraw();
+      // trRef2.current
+    }
+  }, [textProps.selected]);
+
+
   const handleImageClick = () => {
     setImageProps({
       ...imageProps,
@@ -59,6 +68,13 @@ function App() {
       setRenderText({...renderText , text:text , isAdd:true})
     }
   }
+  const handleTextClick = () => {
+    setTextProps({
+      ...textProps,
+      selected: !textProps.selected,
+    });
+    console.log(textProps.selected)
+  };
 
 
 
@@ -80,16 +96,20 @@ function App() {
             ref={trRef}
            />
         )}
+        
+      </Layer>
+      <Layer>
     { renderText.isAdd ? <Text
           text={renderText.text}
+          ref={textRef}
           x={100}
           y={100}
           fontSize={textProps.size}
           fontFamily="Arial"
           fill="white"
           draggable ={true}
-        />  :null}
-        
+          onClick={handleTextClick}
+        />  :null}{textProps.selected && (<Transformer ref={trRef2} />)}
       </Layer>
     </Stage>
      <input  onChange={(e)=>setText(e.target.value)} ></input>
