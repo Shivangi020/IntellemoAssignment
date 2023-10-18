@@ -10,8 +10,9 @@ function App() {
   const [text ,setText] = useState()
   const [renderText , setRenderText] = useState({text:'' , isAdd :false})
   const imageRef = useRef();
-  // const textRef = useRef()
   const trRef = useRef();
+
+  // const textRef = useRef()
   // const trRef2 = useRef();
   
   const [imageProps, setImageProps] = useState({
@@ -23,7 +24,8 @@ function App() {
   });
 
   const [textProps ,setTextProps] = useState({
-    selected :false 
+    selected :false ,
+    size : 30
   })
 
   useEffect(() => {
@@ -76,15 +78,13 @@ function App() {
         {imageProps.selected && (
           <Transformer
             ref={trRef}
-            enabledAnchors={['top-left', 'top-right', 'bottom-left', 'bottom-right']}
-  
-          />
+           />
         )}
     { renderText.isAdd ? <Text
           text={renderText.text}
           x={100}
           y={100}
-          fontSize={30}
+          fontSize={textProps.size}
           fontFamily="Arial"
           fill="white"
           draggable ={true}
@@ -92,7 +92,7 @@ function App() {
         
       </Layer>
     </Stage>
-     <input  onChange={(e)=>setText(e.target.value)} value={text}></input>
+     <input  onChange={(e)=>setText(e.target.value)} ></input>
     <button onClick={()=> addButtonHandler()}>{renderText.isAdd?'Remove':"Add"}</button>
     <VideoRender/>
     </>
